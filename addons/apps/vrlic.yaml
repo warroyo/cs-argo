@@ -7,7 +7,7 @@ spec:
   destination:
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps/vrlic
+    path: addons/vrlic
     repoURL: https://github.com/warroyo/cs-argo
     targetRevision: HEAD
   project: default

@@ -66,15 +66,16 @@ spec:
        effect: NoSchedule
      containers:
      - name: fluentd-lint
-       image: docker.io/vmware/log-intelligence-fluentd
+       image:  harbor-repo.vmware.com/dockerhub-proxy-cache/docker.io/vmware/log-intelligence-fluentd
        command: ["fluentd"]
+       envFrom:
+        - secretRef:
+            name: vrlic-api-token
        env:
        - name: FLUENTD_ARGS
          value: --no-supervisor -q
        - name: CLUSTER_NAME
-         value: "<CLUSTER_NAME>"
-       - name: API_KEY
-         value: "<API-KEY>"
+         value: "gitops"
        resources:
          limits:
            memory: 500Mi
