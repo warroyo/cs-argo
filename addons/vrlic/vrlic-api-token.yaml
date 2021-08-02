@@ -1,0 +1,22 @@
+{
+  "kind": "SealedSecret",
+  "apiVersion": "bitnami.com/v1alpha1",
+  "metadata": {
+    "name": "vrlic-api-token",
+    "namespace": "kube-system",
+    "creationTimestamp": null
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "name": "vrlic-api-token",
+        "namespace": "kube-system",
+        "creationTimestamp": null
+      },
+      "data": null
+    },
+    "encryptedData": {
+      "API_KEY": "AgCR0E2wiaCZ1BWqK7dfBujFePThdrlxMYbB5VuCCQKft6UshonlpxlW8Dveplvd9PAYoyZR2QKfzXTPOL6BycEJCwb3BJ1fWZ72W9Ff5rfigcLXPTn23AeCzEJYAKtyg3reHmkgotKV07KIhEGQR7ByPzspTdo+IfhLQuMAzqZGLL/xEA26IRj86ycI41I+FA2T3BaESj6jV2GNPaFsh+UpDgHhESh8CgHNqKO1ZKIN/igTng821iLixTN4SVQxUy4//MEGEZsA9VECGcLSjeeolQNMX0o/JBLL+hIjf+zPOw16aScZ/nCz4qMkdmnOcsaEsbDPHMHZ/M9qPLDXTUTc1TxMNOiZdjJlzCgWymPhR7UqRUJ9iVIJMJ40j1DOiDkDoYqlSZ3pK92dwS8c8orq86k/8AAkAMz5yhubuh4Ul7+HsNFMrfNCWWoWgHM5stuJBjAuS09ehBMnvBgposveLCIO/vMEFKjU74VHiojXEAUUWFXXK3U3sDqCcSgCEoml3WJRn4qkPrJnqV33jKbmGsqTiUkvQEM/x87rwiukMAQKTN1zp4LcNHEwlSPVwcUQW3o1aQ6JqqVqvMDHA19Du6Xh72Y3lDlMtKHImrVPiWiYnnOpBUFcoqs7anDOJfYA/G3Rd29gem/ZYAcyAN/wTJEx5/3x8KJ9HgyMeU9dKWABchcbCTZvVq81S36K0CJEPKqy1kHsf/iKzg26yf3T2kpNm/vZD9iJUjq8Yfg/Nw=="
+    }
+  }
+}
