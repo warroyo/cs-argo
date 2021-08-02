@@ -66,7 +66,7 @@ spec:
        effect: NoSchedule
      containers:
      - name: fluentd-lint
-       image:  harbor-repo.vmware.com/dockerhub-proxy-cache/docker.io/vmware/log-intelligence-fluentd
+       image:  harbor-repo.vmware.com/dockerhub-proxy-cache/vmware/log-intelligence-fluentd
        command: ["fluentd"]
        envFrom:
         - secretRef:
