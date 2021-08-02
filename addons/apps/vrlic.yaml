@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vrlic
+  namespace: argocd
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: apps/vrlic
+    repoURL: https://github.com/warroyo/cs-argo
+    targetRevision: HEAD
+  project: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false

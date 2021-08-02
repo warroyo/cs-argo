@@ -1,0 +1,25 @@
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:template", "template")
+#@ load("@ytt:data", "data")
+#@ load("@ytt:yaml", "yaml")
+
+#! remove current state from the output
+#@overlay/match by=lambda i,l,r: "uid" in l["meta"]
+#@overlay/remove
+---
+
+#! load current state into a variable
+#@ current = yaml.decode(data.read("stdin.yml"))
+
+#! combine desired state with current state
+#@overlay/match by=overlay.all
+---
+fullName:
+  #@overlay/match missing_ok=True
+  orgId: #@ current["fullName"]["orgId"]
+
+#@yaml/text-templated-strings
+meta:
+  #@overlay/match missing_ok=True
+  resourceVersion: #@ current["meta"]["resourceVersion"]
+

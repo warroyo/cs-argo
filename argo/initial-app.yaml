@@ -1,0 +1,12 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: addons
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: addons/apps
+    repoURL: https://github.com/warroyo/cs-argo
+    targetRevision: HEAD
+  project: default

@@ -1,0 +1,206 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    k8s-app: fluentd
+  name: fluentd-lint-logging
+  namespace: kube-system
+
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: fluentd-clusterrole
+rules:
+  - apiGroups:
+    - ""
+    resources:
+    - "namespaces"
+    - "pods"
+    verbs:
+    - "list"
+    - "get"
+    - "watch"
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: fluentd-clusterrole
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: fluentd-clusterrole
+subjects:
+  - kind: ServiceAccount
+    name: fluentd-lint-logging
+    namespace: kube-system
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd-lint-logging
+  namespace: kube-system
+  labels:
+    k8s-app: fluentd-lint-logging
+    app: fluentd-lint-logging
+    version: v1
+    kubernetes.io/cluster-service: "true"
+spec:
+ selector:
+   matchLabels:
+     name: fluentd-lint-logging
+ template:
+   metadata:
+     labels:
+       name: fluentd-lint-logging
+       app: fluentd-lint-logging
+       version: v1
+       kubernetes.io/cluster-service: "true"
+   spec:
+     serviceAccount: fluentd-lint-logging
+     serviceAccountName: fluentd-lint-logging
+     tolerations:
+     - key: node-role.kubernetes.io/master
+       effect: NoSchedule
+     containers:
+     - name: fluentd-lint
+       image: docker.io/vmware/log-intelligence-fluentd
+       command: ["fluentd"]
+       env:
+       - name: FLUENTD_ARGS
+         value: --no-supervisor -q
+       - name: CLUSTER_NAME
+         value: "<CLUSTER_NAME>"
+       - name: API_KEY
+         value: "<API-KEY>"
+       resources:
+         limits:
+           memory: 500Mi
+         requests:
+           cpu: 100m
+           memory: 200Mi
+       volumeMounts:
+       - name: varlog
+         mountPath: /var/log
+       - name: varlogcontainers
+         mountPath: /var/log/containers
+       - name: varlibdockercontainers
+         mountPath: /var/lib/docker/containers
+         readOnly: true
+       - name: config-volume
+         mountPath: /etc/fluent
+     volumes:
+     - name: varlog
+       hostPath:
+         path: /var/log
+     - name: varlogcontainers
+       hostPath:
+         path: /var/log/containers
+     - name: varlibdockercontainers
+       hostPath:
+         path: /var/lib/docker/containers
+     - name: config-volume
+       configMap:
+         name: lint-fluent-config
+     - name: lint-fluent-volume
+       emptyDir: {}
+     - name: var-logs
+       emptyDir: {}
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lint-fluent-config
+  namespace: kube-system
+data:
+  fluent.conf: |
+    <source>
+      @id in_tail_container_logs
+      @type tail
+      path /var/log/containers/*.log
+      pos_file /var/log/fluentd-containers.log.pos
+      tag raw.kubernetes.*
+      read_from_head true
+      <parse>
+        @type multi_format
+        <pattern>
+          format json
+          time_key time
+          time_format %Y-%m-%dT%H:%M:%S.%NZ
+        </pattern>
+        <pattern>
+          format /^(?<time>.+) (?<stream>stdout|stderr) [^ ]* (?<log>.*)$/
+          time_format %Y-%m-%dT%H:%M:%S.%N%:z
+        </pattern>
+      </parse>
+    </source>
+
+    # Detect exceptions in the log output and forward them as one log entry.
+    <match raw.kubernetes.**>
+      @id raw.kubernetes
+      @type detect_exceptions
+      remove_tag_prefix raw
+      message log
+      stream stream
+      multiline_flush_interval 5
+      max_bytes 500000
+      max_lines 1000
+    </match>
+
+    # Concatenate multi-line logs
+    <filter kubernetes.**>
+      @id filter_concat
+      @type concat
+      key message
+      multiline_end_regexp /\n$/
+      separator ""
+    </filter>
+
+    <filter kubernetes.**>
+      @type record_transformer
+      <record>
+      environment tanzu_k8s_grid
+      log_type kubernetes
+      </record>
+      watch false
+    </filter>
+
+    # Enriches records with Kubernetes metadata
+    <filter kubernetes.**>
+      @id filter_kubernetes_metadata
+      @type kubernetes_metadata
+      watch false
+    </filter>
+    
+    # adds k8s cluster name from env var
+    <filter kubernetes.**>
+      @type record_transformer
+      <record>
+        kubernetes_cluster_name "#{ENV['CLUSTER_NAME']}"
+      </record>
+    </filter>
+
+
+    <match kubernetes.**>
+      @type vmware_log_intelligence
+      endpoint_url https://data.mgmt.cloud.vmware.com/le-mans/v1/streams/ingestion-pipeline-stream
+      verify_ssl false
+      <headers>
+        Content-Type application/json
+        Authorization Bearer #{ENV['API_KEY']}
+        structure simple
+      </headers>
+      <buffer>
+        chunk_limit_records 300
+        flush_interval 3s
+        retry_max_times 3
+      </buffer>
+      <format>
+        @type json
+        tag_key text
+      </format>
+    </match>

@@ -1,0 +1,41 @@
+type:
+  kind: Cluster
+  package: vmware.tanzu.manage.v1alpha1.cluster
+  version: v1alpha1
+fullName:
+  managementClusterName: "seti-labs" #test3
+  name: cluster-gitops-1
+  provisionerName: "lab"
+meta:
+  labels: null
+spec:
+  clusterGroupName: seti-labs
+  tkgServiceVsphere:
+    distribution:
+      version: v1.18.10+vmware.1-tkg.1.3a6cd48
+    settings:
+      network:
+        pods:
+          cidrBlocks:
+          - 192.0.2.0/16
+        services:
+          cidrBlocks:
+          - 198.51.100.0/12
+      storage:
+        classes:
+        - k8s-storage-policy
+        defaultClass: "k8s-storage-policy"
+    topology:
+      controlPlane:
+        class: best-effort-medium
+        highAvailability: false
+        storageClass: k8s-storage-policy
+      nodePools:
+      - info:
+          description: default description for the nodepool
+          name: default-node-pool
+        spec:
+          tkgServiceVsphere:
+            class: best-effort-medium
+            storageClass: k8s-storage-policy
+          workerNodeCount: "1" #test8
