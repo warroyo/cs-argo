@@ -11,3 +11,8 @@ spec:
     repoURL: https://github.com/warroyo/cs-argo
     targetRevision: HEAD
   project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
