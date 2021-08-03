@@ -1,9 +1,13 @@
 #!/bin/bash
+# required env vars:
+#   TMC_API_TOKEN
+#   PROVISIONER
+#   MGMT_CLUSTER
+#   WAVEFRONT_TOKEN
+#   CLUSTER_NAME
+
+
 echo "enabling TO on ${CLUSTER_NAME}"
-
-export TMC_API_TOKEN=$1
-export WAVEFRONT_TOKEN=$2
-
 
 
  
