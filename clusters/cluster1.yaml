@@ -12,7 +12,7 @@ spec:
   clusterGroupName: seti-labs
   tkgServiceVsphere:
     distribution:
-      version: v1.18.10+vmware.1-tkg.1.3a6cd48
+      version: 1.19.7+vmware.1-tkg.2.f52f85a
     settings:
       network:
         pods:
