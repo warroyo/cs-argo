@@ -1,12 +1,8 @@
 #!/bin/bash
 
-#requires 2 env vars
-# DOCKERHUB_PASS
-# DOCKERHUB_USER
 script_full_path=$(dirname "$0")
 #add namespace and create a secret for dockerhub since it wont be able to pull the redis image due to rate limiting
 kubectl create ns argocd
-kubectl create secret -n argocd docker-registry dockerhub --docker-server=https://index.docker.io/v2/ --docker-username=$DOCKERHUB_USER --docker-password=$DOCKERHUB_PASS
 
 #running this twice is a workaround due to the lab being slow
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml -v 10
