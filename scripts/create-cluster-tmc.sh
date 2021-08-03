@@ -5,7 +5,7 @@
 #   PROVISIONER
 #   MGMT_CLUSTER
 #
-
+script_full_path=$(dirname "$0")
 tmc login --no-configure --name cs-gitops
 
 
@@ -15,7 +15,7 @@ CREATE_ERROR=$?
 if [ $CREATE_ERROR -eq 1 ] && [[ "${RESULT}" == *"AlreadyExists"* ]]; then
 echo "cluster exists updating..."
 
-tmc cluster get $CLUSTER_NAME -p $PROVISIONER -m $MGMT_CLUSTER | ytt -f rebase.yml -f - -f $CLUSTER_YAML  > cluster-update.yaml
+tmc cluster get $CLUSTER_NAME -p $PROVISIONER -m $MGMT_CLUSTER | ytt -f $script_full_path/rebase.yml -f - -f $CLUSTER_YAML  > cluster-update.yaml
 
 tmc cluster update -f cluster-update.yaml
 

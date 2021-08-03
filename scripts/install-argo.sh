@@ -3,7 +3,7 @@
 #requires 2 env vars
 # DOCKERHUB_PASS
 # DOCKERHUB_USER
-
+script_full_path=$(dirname "$0")
 #add namespace and create a secret for dockerhub since it wont be able to pull the redis image due to rate limiting
 kubectl create ns argocd
 kubectl create secret -n argocd docker-registry dockerhub --docker-server=https://index.docker.io/v2/ --docker-username=$DOCKERHUB_USER --docker-password=$DOCKERHUB_PASS
@@ -16,4 +16,4 @@ kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}
 kubectl scale deployment argocd-redis --replicas 0 -n argocd
 kubectl scale deployment argocd-redis --replicas 1 -n argocd
 #apply initial app
-kubectl apply -f ../argo/initial-app.yml
+kubectl apply -f  $script_full_path/../argo/initial-app.yaml
