@@ -15,7 +15,7 @@ CREATE_ERROR=$?
 if [ $CREATE_ERROR -eq 1 ] && [[ "${RESULT}" == *"AlreadyExists"* ]]; then
 echo "cluster exists updating..."
 
-tmc cluster get $CLUSTER_NAME -p $PROVISIONER -m $MGMT_CLUSTER | ytt -f $script_full_path/rebase.yml -f - -f $CLUSTER_YAML  > cluster-update.yaml
+tmc cluster get $CLUSTER_NAME -p $PROVISIONER -m $MGMT_CLUSTER | ytt -f $script_full_path/../manifests/rebase.yml -f - -f $CLUSTER_YAML  > cluster-update.yaml
 
 tmc cluster update -f cluster-update.yaml
 
