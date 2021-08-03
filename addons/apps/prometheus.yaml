@@ -10,7 +10,7 @@ spec:
     helm:
       parameters:
        - name: alertmanager.enabled	
-          value: "false"
+         value: "false"
     repoURL: 'https://charts.bitnami.com/bitnami'
     targetRevision: '0.48.1'
     chart: kube-prometheus
