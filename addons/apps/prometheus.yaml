@@ -12,6 +12,8 @@ spec:
       parameters:
        - name: alertmanager.enabled	
          value: "false"
+       - name: prometheus.service.type
+         value: LoadBalancer
     repoURL: 'https://charts.bitnami.com/bitnami'
     targetRevision: '6.1.4'
     chart: kube-prometheus
