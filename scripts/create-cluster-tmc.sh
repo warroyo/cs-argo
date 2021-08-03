@@ -20,6 +20,8 @@ tmc cluster get $CLUSTER_NAME -p $PROVISIONER -m $MGMT_CLUSTER | ytt -f $script_
 tmc cluster update -f cluster-update.yaml
 
 rm cluster-update.yaml
+#give it time to change status before moving on
+sleep 30
 
 elif [ $CREATE_ERROR -eq 1 ]; then
 echo "there was an error"
