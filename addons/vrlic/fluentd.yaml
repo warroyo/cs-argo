@@ -192,7 +192,7 @@ data:
       verify_ssl false
       <headers>
         Content-Type application/json
-        Authorization Bearer "#{ENV['API_KEY']}"
+        "Authorization Bearer #{ENV['API_KEY']}"
         structure simple
       </headers>
       <buffer>
