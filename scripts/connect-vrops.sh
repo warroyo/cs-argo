@@ -4,9 +4,16 @@
 # CLUSTER_NAME
 # CLUSTER_URL
 # CLUSTER_CERT
+# CLIENT_CERT
 # CLIENT_KEY
 # PROM_URL
 
+PROM_IP=$(kubectl get svc -n monitoring  prometheus-kube-prometheus-prometheus -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+export PROM_URL="http://${PROM_IP}:9090"
+export CLUSTER_CERT=$(kubectl config view --minify --raw --output 'jsonpath={..cluster.certificate-authority-data}')
+export CLIENT_CERT=$(kubectl config view --minify --raw --output 'jsonpath={..user.client-certificate-data}')
+export CLIENT_KEY=$(kubectl config view --minify --raw --output 'jsonpath={..user.client-key-data}')
+export CLUSTER_URL=$(kubectl config view --minify --raw --output 'jsonpath={..cluster.server}')
 
 
 #get access token for vrops cloud
