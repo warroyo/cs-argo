@@ -81,7 +81,7 @@ spec:
            memory: 500Mi
          requests:
            cpu: 100m
-           memory: 210Mi
+           memory: 250Mi
        volumeMounts:
        - name: varlog
          mountPath: /var/log
