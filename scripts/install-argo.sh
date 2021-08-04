@@ -3,7 +3,7 @@
 script_full_path=$(dirname "$0")
 
 #running this twice is a workaround due to the lab being slow
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml -v 10
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 kubectl patch serviceaccount argocd-redis -p '{"imagePullSecrets": [{"name": "dockerhub"}]}' -n argocd
 #patch to get a loadbalancer
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
