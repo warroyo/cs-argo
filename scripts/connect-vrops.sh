@@ -37,10 +37,22 @@ curl  -H "Content-Type: application/json" -H "Accept: application/json" -H "Auth
     {
       "name" : "K8S_MASTERURL",
       "value" : "$CLUSTER_URL"
-    } 
+    }, 
     {
       "name" : "PROMETHEUS_METRIC_LABELS_TO_EXCLUDE",
       "value" : ""
+    },
+      {
+      "name" : "DATA_RETENTION_PLAN",
+      "value" : "PLATFORM"
+    },
+       {
+      "name" : "MONITOR_JAVA",
+      "value" : "false"
+    },
+       {
+      "name" : "ENABLE_CADVISOR_INSTALL_CHECK",
+      "value" : "false"
     }
   ],
   "credential" : {
@@ -66,8 +78,8 @@ curl  -H "Content-Type: application/json" -H "Accept: application/json" -H "Auth
         "value" : "$PROM_URL"
       }  
 
-    ],
-  },
+    ]
+  }
 }
 EOF
 
@@ -76,6 +88,8 @@ export ADAPTER_UUID=$(cat patch.json| jq -r '.id')
 echo $ADAPTER_UUID
 
 curl -H "Content-Type: application/json" -H "Accept: application/json" -H "Authorization: CSPToken ${ACCESS_TOKEN}" -XPATCH https://www.mgmt.cloud.vmware.com/vrops-cloud/suite-api/api/adapters -d @patch.json
+
+echo "cert accepted"
 
 curl -H "Content-Type: application/json" -H "Accept: application/json" -H "Authorization: CSPToken ${ACCESS_TOKEN}" -XPUT https://www.mgmt.cloud.vmware.com/vrops-cloud/suite-api/api/adapters/$ADAPTER_UUID/monitoringstate/start
 
