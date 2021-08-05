@@ -3,13 +3,13 @@ type:
   package: vmware.tanzu.manage.v1alpha1.cluster
   version: v1alpha1
 fullName:
-  managementClusterName: "seti-labs" #test19
+  managementClusterName: "seti-labs"
   name: cluster-gitops-2
   provisionerName: "lab"
 meta:
   labels: null
 spec:
-  clusterGroupName: seti-labs
+  clusterGroupName: dev-team-gitops
   tkgServiceVsphere:
     distribution:
       version: 1.19.7+vmware.1-tkg.2.f52f85a
