@@ -8,8 +8,17 @@
 # CLIENT_KEY
 # PROM_URL
 
-PROM_IP=$(kubectl get svc -n monitoring  prometheus-kube-prometheus-prometheus -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
-export PROM_URL="http://${PROM_IP}:9090"
+# Pass the name of a service to check ie: sh check-endpoint.sh staging-voting-app-vote
+# Will run forever...
+external_ip=""
+while [ -z $external_ip ]; do
+  echo "Waiting for end point..."
+  external_ip=$(kubectl get svc prometheus-kube-prometheus-prometheus -n monitoring --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
+  [ -z "$external_ip" ] && sleep 10
+done
+echo 'End point ready:' && echo $external_ip
+
+export PROM_URL="http://${external_ip}:9090"
 export CLUSTER_CERT=$(kubectl config view --minify --raw --output 'jsonpath={..cluster.certificate-authority-data}')
 export CLIENT_CERT=$(kubectl config view --minify --raw --output 'jsonpath={..user.client-certificate-data}')
 export CLIENT_KEY=$(kubectl config view --minify --raw --output 'jsonpath={..user.client-key-data}')
