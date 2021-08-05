@@ -9,7 +9,7 @@ fullName:
 meta:
   labels: null
 spec:
-  clusterGroupName: seti-labs
+  clusterGroupName: dev-team-gitops
   tkgServiceVsphere:
     distribution:
       version: 1.19.7+vmware.1-tkg.2.f52f85a
