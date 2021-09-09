@@ -4,7 +4,7 @@ type:
   version: v1alpha1
 fullName:
   managementClusterName: "seti-labs"
-  name: cluster-gitops-3
+  name: cluster-gitops-6
   provisionerName: "lab"
 meta:
   labels: null
